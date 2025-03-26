@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Access Denied (403)</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff512f, #dd2476);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .error-box {
+            text-align: center;
+        }
+        .error-title {
+            font-size: 72px;
+            font-weight: bold;
+        }
+        .error-msg {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            font-size: 18px;
+            border-radius: 10px;
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="error-box">
+    <div class="error-title">403</div>
+    <div class="error-msg">Access Denied. You do not have permission to view this page.</div>
+    <a th:href="@{/tasks/all}" class="btn btn-dark">Go Back Home</a>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</body>
+</html>

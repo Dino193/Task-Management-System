@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Detail</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .card {
+            margin-top: 40px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+        .card-header {
+            background-color: #007bff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card-header, .card-body {
+            border-radius: 15px;
+        }
+        .btn {
+            font-size: 16px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card text-white">
+        <div class="card-header text-center">
+            User Detail
+        </div>
+        <div class="card-body">
+            <h4>ID: <span th:text="${user.id}"></span></h4>
+            <h4>Email: <span th:text="${user.email}"></span></h4>
+            <h4>Roles:</h4>
+            <ul>
+                <li th:each="role : ${user.roles}" th:text="${role}"></li>
+            </ul>
+            <a th:href="@{/users}" class="btn btn-secondary">Back to User List</a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</body>
+</html>

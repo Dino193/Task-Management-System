@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .card {
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            margin-top: 40px;
+        }
+        .card-header {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+        }
+        table {
+            color: #fff;
+        }
+        .btn {
+            font-size: 16px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .gradient-bg {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        a, a:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>User Management</span>
+            <a th:href="@{/tasks/all}" class="btn btn-secondary">Back to Tasks</a>
+        </div>
+        <div class="card-body">
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+            <h4 class="gradient-bg mb-4">All Registered Users</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u : ${users}">
+                            <td th:text="${u.id}"></td>
+                            <td>
+                                <a th:href="@{/users/{id}(id=${u.id})}" class="text-decoration-none text-white">
+                                    <span th:text="${u.email}"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <span th:each="role : ${u.roles}" th:text="${role} + ' '"></span>
+                            </td>
+                            <td>
+                                <!-- Edit Roles -->
+                                <a th:href="@{/users/{id}/edit-roles(id=${u.id})}" class="btn btn-primary btn-sm">Edit Roles</a>
+                                <!-- Promote to Admin -->
+                                <form th:action="@{/users/{id}/promote(id=${u.id})}" method="post" 
+                                      style="display:inline;">
+                                    <button type="submit" class="btn btn-success btn-sm">Promote</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> <!-- table-responsive -->
+        </div> <!-- card-body -->
+    </div> <!-- card -->
+</div> <!-- container -->
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</body>
+</html>

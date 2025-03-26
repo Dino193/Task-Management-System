@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        /* Background Styling */
+        body {
+            background: linear-gradient(to right,rgb(0, 0, 0), #00f2fe);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Centered Form Container */
+        .task-container {
+            max-width: 600px;
+        }
+
+        /* Card Styling */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            background: #ffffff;
+        }
+
+        /* Card Header */
+        .card-header {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            background: #007bff;
+            color: white;
+        }
+
+        /* Input Fields */
+        .form-control, .form-select {
+            height: 50px;
+            font-size: 18px;
+            border-radius: 12px;
+            border: 2px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Button Styling */
+        .btn {
+            font-size: 18px;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: linear-gradient(to right, #28a745, #218838);
+            border: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(to right, #218838, #1e7e34);
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #6c757d, #5a6268);
+            border: none;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #5a6268, #4e555b);
+            transform: scale(1.05);
+        }
+
+        /* Label Styling */
+        .form-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container task-container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 th:text="${#strings.isEmpty(task.id) ? 'Create Task' : 'Edit Task'}"></h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="${#strings.isEmpty(task.id) ? '/tasks/admin/save' : '/tasks/admin/update/' + task.id}"
+                          method="post"
+                          th:object="${task}">
+                        
+                        <!-- Task Title -->
+                        <div class="mb-4">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" th:field="*{title}" placeholder="Enter task title" required>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" th:field="*{description}" placeholder="Enter task description" rows="4" required></textarea>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" th:field="*{status}" required>
+                                <option value="" disabled selected>Select status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-4">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select" th:field="*{priority}" required>
+                                <option value="" disabled selected>Select priority</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Save Task</button>
+                            <a th:href="@{/tasks}" class="btn btn-secondary mt-3">Cancel</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</body>
+</html>

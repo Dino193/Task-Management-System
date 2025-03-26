@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Task List (Secure)</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        /*  Gradient Background */
+        body {
+            background: linear-gradient(to right,rgb(0, 0, 0), #2a5298);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /*  Card Styling */
+        .card {
+            border-radius: 20px;
+            box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 🎨 Card Header */
+        .card-header {
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            background: #007bff;
+            color: white;
+        }
+
+        /* 📏 Table Styling */
+        .table {
+            font-size: 18px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 🟢 Status & Priority Badges */
+        .badge {
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        /* 🎯 Action Buttons */
+        .btn {
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        .btn-warning:hover {
+            background-color: #d39e00;
+            transform: scale(1.05);
+        }
+
+        /* 📱 Responsive Design */
+        @media (max-width: 768px) {
+            .table {
+                font-size: 16px;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Task Management</h3>
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <a href="/tasks/admin/create" class="btn btn-success">+ Create New Task</a>
+            </div>
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <a href="/users" class="btn btn-success">+ User Managment</a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <!--  Debug: Show Authenticated User Info -->
+            <div class="alert alert-info">
+                <strong>👤 User:</strong> <span sec:authentication="name"></span> <br>
+                <strong>🔑 Roles:</strong> <span sec:authentication="authorities"></span>
+            </div>
+
+            <!--  Success Message -->
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+            <!--  Task Table -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>📌 Title</th>
+                            <th>📝 Description</th>
+                            <th>📊 Status</th>
+                            <th>⚡ Priority</th>
+                            <th>👤 Assigned User</th>
+                            <th>🔧 Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="task, iterStat : ${tasks}">
+                            <td th:text="${iterStat.index + 1}"></td>
+                            <td th:text="${task.title}"></td>
+                            <td th:text="${task.description}"></td>
+                            <td>
+                                <span th:text="${task.status}" 
+                                      th:classappend="${task.status == 'Completed' ? 'badge bg-success' :
+                                                       task.status == 'In Progress' ? 'badge bg-warning text-dark' :
+                                                       'badge bg-secondary'}">
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${task.priority}" 
+                                      th:classappend="${task.priority == 'High' ? 'badge bg-danger' :
+                                                       task.priority == 'Medium' ? 'badge bg-warning text-dark' :
+                                                       'badge bg-info'}">
+                                </span>
+                            </td>
+                            <td th:text="${task.user != null ? task.user.email : 'Unassigned'}"></td>
+                            <td>
+                                <!-- ✏ Edit Button (Admins Only) -->
+                                <a sec:authorize="hasAuthority('ROLE_ADMIN')" 
+                                   th:href="@{/tasks/admin/edit/{id}(id=${task.id})}" 
+                                   class="btn btn-sm btn-primary">✏ Edit</a>
+
+                                <!--  Delete Button (Admins Only) -->
+                                <a sec:authorize="hasAuthority('ROLE_ADMIN')" 
+                                   th:href="@{/tasks/admin/delete/{id}(id=${task.id})}"
+                                   onclick="return confirm('Are you sure you want to delete this task?');"
+                                   class="btn btn-sm btn-danger">🗑 Delete</a>
+                                   
+                                 
+							  <!-- Update Button (Users Only) -->
+                                <a sec:authorize="hasAuthority('ROLE_USER')" 
+                                   th:href="@{/tasks/user/update/{id}(id=${task.id})}"
+                                   class="btn btn-sm btn-primary">🔄 Update</a>
+                                   
+                                   
+                                      <!-- User Management Button (Admins Only) -->
+									<div sec:authorize="hasAuthority('ROLE_ADMIN')"
+										class="text-end mb-3">
+										<a th:href="@{/users}"
+											class="btn btn-lg btn-warning fw-bold px-4 py-2 shadow-lg"
+											style="font-size: 22px; border-radius: 12px;"> 👤 User
+											Management </a>
+									</div> 
+									
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> <!-- End Table Responsive -->
+        </div> <!-- End Card Body -->
+    </div> <!-- End Card -->
+</div> <!-- End Container -->
+
+<!-- Bootstrap JS -->
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</body>
+</html>

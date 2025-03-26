@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Roles</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            background: linear-gradient(to right, #ee9ca7, #ffdde1);
+            min-height: 100vh;
+        }
+        .card {
+            border-radius: 15px;
+            margin-top: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .card-header {
+            background-color: #28a745;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .btn {
+            font-size: 16px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container">
+    <div class="card">
+        <div class="card-header text-center">
+            Edit Roles for <span th:text="${user.email}"></span>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/users/{id}/edit-roles(id=${user.id})}" method="post">
+                <!-- Example: If your 'roles' are strings, you can create checkboxes for them -->
+                <!-- Or you can allow admin to enter them manually (less user-friendly) -->
+
+                <div class="mb-3">
+                    <label for="rolesInput" class="form-label fw-bold">Roles (comma-separated)</label>
+                    <input type="text" class="form-control" id="rolesInput" name="roles"
+                           placeholder="e.g. ROLE_ADMIN,ROLE_USER"
+                           th:value="${#strings.listJoin(user.roles, ',')}"/>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Update Roles</button>
+                    <a th:href="@{/users}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+</body>
+</html>
